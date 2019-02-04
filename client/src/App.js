@@ -1,4 +1,8 @@
 import React, { Component } from "react";
+import MainVideo from "./component/MainVideo";
+import Logo from "./component/Logo";
+import RecordSection from "./component/RecordSection";
+import NavBar from "./component/NavBar";
 
 class App extends Component {
   constructor() {
@@ -8,43 +12,48 @@ class App extends Component {
       theirVideoSrc: null,
       endpoint: "https://127.0.0.1:4001"
     };
-    this.getWebCam = this.getWebCam.bind(this);
+    // this.getWebCam = this.getWebCam.bind(this);
   }
 
-  async getWebCam() {
-    const stream = await navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .catch(err => console.log("did not work", err.message));
-    const chunks = [];
-    this.setState({ myVideoSrc: stream });
-    const myVid = document.getElementById("myVid");
-    const thierVid = document.getElementById("thierVid");
-    const record = new MediaRecorder(stream, { mimeType: "video/webm" });
-    record.ondataavailable = e => {
-      if (e.data.size > 0) {
-        chunks.push(e.data);
-      }
-    };
-    myVid.srcObject = stream;
-    myVid.play();
-    record.start(10);
-    setTimeout(() => {
-      let superBlob = new Blob(chunks, { type: "video/webm" });
-      thierVid.src = window.URL.createObjectURL(superBlob);
-      thierVid.play();
-    }, 10 * 1000);
+  // // async getWebCam() {
+  // //   const stream = await navigator.mediaDevices
+  // //     .getUserMedia({ video: true, audio: true })
+  // //     .catch(err => console.log("did not work", err.message));
+  // //   const chunks = [];
+  // //   this.setState({ myVideoSrc: stream });
+  // //   const myVid = document.getElementById("myVid");
+  // //   const thierVid = document.getElementById("thierVid");
+  // //   const record = new MediaRecorder(stream, { mimeType: "video/webm" });
+  // //   record.ondataavailable = e => {
+  // //     if (e.data.size > 0) {
+  // //       chunks.push(e.data);
+  // //     }
+  // //   };
+  // //   myVid.srcObject = stream;
+  // //   myVid.play();
+  // //   record.start(10);
+  // //   setTimeout(() => {
+  // //     let superBlob = new Blob(chunks, { type: "video/webm" });
+  // //     thierVid.src = window.URL.createObjectURL(superBlob);
+  // //     thierVid.play();
+  // //   }, 10 * 1000);
 
-    return stream;
-  }
+  // //   return stream;
+  // // }
 
-  componentDidMount() {
-    this.getWebCam();
-  }
+  // // componentDidMount() {
+  // //   this.getWebCam();
+  // // }
+
+
+
   render() {
     return (
       <div className="App">
-        <video id="myVid" muted style={{ height: "300px" }} />
-        <video id="thierVid" style={{ height: "300px" }} />
+        <Logo />
+        <MainVideo />
+        <RecordSection />
+        <NavBar />
       </div>
     );
   }
