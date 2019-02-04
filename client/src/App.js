@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import Logo from "./component/Logo"
-import {Route, Switch} from "react-router-dom"
+import Logo from "./component/Logo";
+import { Route, Switch } from "react-router-dom";
 import Home from "./Home";
 import NavBar from "./component/NavBar";
 
@@ -12,7 +12,15 @@ class App extends Component {
       theirVideoSrc: null,
       endpoint: "https://127.0.0.1:4001"
     };
-    // this.getWebCam = this.getWebCam.bind(this);
+    this.getWebCam = this.getWebCam.bind(this);
+  }
+
+  async getWebCam(){
+    const stream = await navigator.mediaDevices.getUserMedia({video: true, audio: true}).catch(err => console.log("uh ohh we have a problem ", err.message))
+    this.setState({myVideoSrc: stream})
+    const myvid = document.getElementById("main-vid")
+    myvid.srcObject = stream;
+    myvid.play();
   }
 
   // // async getWebCam() {
@@ -45,17 +53,15 @@ class App extends Component {
   // //   this.getWebCam();
   // // }
 
-
-
   render() {
     return (
       <div>
-      <Logo />
-      <Switch>
-      <Route path = "/" render = {props => (<Home {...props} /> )}/>
-      <Route path = "/recordings" />
-      </Switch>
-      <NavBar />
+        <Logo />
+        <Switch>
+          <Route path="/" render={props => <Home {...props} vidStart = {this.getWebCam}/>} />
+          <Route path="/recordings" />
+        </Switch>
+        <NavBar />
       </div>
     );
   }

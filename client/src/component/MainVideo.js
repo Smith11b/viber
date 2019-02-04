@@ -1,6 +1,6 @@
 import React from 'react'
 
-function MainVideo() {
+function MainVideo(props) {
     return (
         <div className = "main-vid-div">
             <video id = "main-vid" muted />

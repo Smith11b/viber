@@ -3,12 +3,12 @@ import MainVideo from "./component/MainVideo";
 
 import RecordSection from "./component/RecordSection";
 
-function Home() {
+function Home(props) {
   return (
     <div>
       <div className="App">
-        <MainVideo />
-        <RecordSection />
+        <MainVideo  />
+        <RecordSection vidStart = {props.vidStart} />
       </div>
     </div>
   );
