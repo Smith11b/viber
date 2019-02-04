@@ -1,10 +1,19 @@
 const express = require('express');
+const multer = require('multer')
+require('dotenv').config()
 
 
 
 const app = express();
 
+const upload = multer({dest: __dirname + '/public/videos'})
+const type = upload.single('upl')
+
+app.post('/api/recordings', type, (req, res)=>{
+    console.log(req.body);
+    console.log(req.file);
+})
 
 
-app.listen(4001, () => console.log("Mr smith I have your server ready"));
+app.listen(process.env.PORT, () => console.log("Mr smith I have your server ready"));
 
