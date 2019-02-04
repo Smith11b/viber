@@ -3,6 +3,7 @@ import MainVideo from "./component/MainVideo";
 import Logo from "./component/Logo";
 import RecordSection from "./component/RecordSection";
 import NavBar from "./component/NavBar";
+import {Route, Switch} from "react-router-dom"
 
 class App extends Component {
   constructor() {
