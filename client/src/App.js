@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import MainVideo from "./component/MainVideo";
-import Logo from "./component/Logo";
-import RecordSection from "./component/RecordSection";
-import NavBar from "./component/NavBar";
+import Logo from "./component/Logo"
 import {Route, Switch} from "react-router-dom"
+import Home from "./Home";
+import NavBar from "./component/NavBar";
 
 class App extends Component {
   constructor() {
@@ -50,11 +49,13 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <Logo />
-        <MainVideo />
-        <RecordSection />
-        <NavBar />
+      <div>
+      <Logo />
+      <Switch>
+      <Route path = "/" render = {props => (<Home {...props} /> )}/>
+      <Route path = "/recordings" />
+      </Switch>
+      <NavBar />
       </div>
     );
   }
