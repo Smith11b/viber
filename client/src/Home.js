@@ -8,7 +8,7 @@ function Home(props) {
     <div>
       <div className="App">
         <MainVideo  />
-        <RecordSection vidStart = {props.vidStart} />
+        <RecordSection vidStart = {props.vidStart} recordVideo = {props.recordVideo} state = {props.state} />
       </div>
     </div>
   );

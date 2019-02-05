@@ -12,10 +12,15 @@ class App extends Component {
       theirVideoSrc: null,
       endpoint: "https://127.0.0.1:4001",
       isRecording: false,
-      videoBlob: null
+      videoBlob: null,
+      MediaRecorder: null,
+      chunks: null,
+      blobSrc: null
     };
     this.getWebCam = this.getWebCam.bind(this);
     this.recordVideo = this.recordVideo.bind(this);
+    this.sendVideoToServer = this.sendVideoToServer.bind(this);
+    this.getTest = this.getTest.bind(this);
   }
 
   async getWebCam() {
@@ -34,35 +39,48 @@ class App extends Component {
       console.log("You haven't started the video yet.");
       return;
     }
+    const fileType = { mimeType: "video/webm;codecs=h264" };
     if (!this.state.isRecording) {
-      var chunks = [];
-      const fileType = { mimeType: "video/webm" };
       var record = new MediaRecorder(this.state.myVideoSrc, fileType);
+      this.setState({ MediaRecorder: record });
+      var chunks = [];
       record.ondataavailable = e => {
         if (e.data.size > 0) {
           chunks.push(e.data);
+          this.setState({ chunks });
         }
       };
-      record.start(10);
+      record.start(1);
       this.setState({ isRecording: true });
     } else {
-      record.stop();
+      this.state.MediaRecorder.stop();
       this.setState({ isRecording: false });
-      setTimeout(() => {
-        let superBlob = new Blob(chunks, { type: "video/webm" });
-        this.setState({ videoBlob: superBlob });
-      }, 2 * 1000);
+      let superBlob = new Blob(this.state.chunks, { type: "video/webm" });
+      this.setState({ videoBlob: superBlob });
+      this.sendVideoToServer();
     }
   }
 
-  async sendVideoToServer(){
+  componentDidMount() {
+    this.getTest();
+  }
+
+  async getTest() {
+    const blobSrc = await fetch("/api/recordings/firsblob");
+    this.setState({ blobSrc: blobSrc.data });
+  }
+
+  async sendVideoToServer() {
     const fd = new FormData();
-    fd.append('upl', localStorage.myfile, 'blob-vid')
-    fetch('api/recordings', {
-      method: 'post',
+    fd.append("video", this.state.videoBlob);
+    const res = await fetch("/api/recordings", {
+      method: "post",
+      data: fd,
+
       body: fd
-    })
-    
+    }).catch(err => console.log("somethings wrong ", err.message));
+
+    console.log(res.body, this.state.videoBlob);
   }
 
   // // async getWebCam() {
@@ -102,7 +120,14 @@ class App extends Component {
         <Switch>
           <Route
             path="/"
-            render={props => <Home {...props} vidStart={this.getWebCam} />}
+            render={props => (
+              <Home
+                {...props}
+                state={this.state}
+                vidStart={this.getWebCam}
+                recordVideo={this.recordVideo}
+              />
+            )}
           />
           <Route path="/recordings" />
         </Switch>
