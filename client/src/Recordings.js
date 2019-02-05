@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Recordings() {
+function Recordings(props) {
     return (
         <div>
             

@@ -15,12 +15,13 @@ class App extends Component {
       videoBlob: null,
       MediaRecorder: null,
       chunks: null,
-      blobSrc: null
+      blobSrc: null,
+      recordings: []
     };
     this.getWebCam = this.getWebCam.bind(this);
     this.recordVideo = this.recordVideo.bind(this);
     this.sendVideoToServer = this.sendVideoToServer.bind(this);
-    this.getTest = this.getTest.bind(this);
+
   }
 
   async getWebCam() {
@@ -32,6 +33,10 @@ class App extends Component {
     myvid.srcObject = stream;
     myvid.play();
     return stream;
+  }
+
+  async getRecordings(){
+    
   }
 
   recordVideo() {
@@ -61,14 +66,8 @@ class App extends Component {
     }
   }
 
-  componentDidMount() {
-    this.getTest();
-  }
 
-  async getTest() {
-    const blobSrc = await fetch("/api/recordings/firsblob");
-    this.setState({ blobSrc: blobSrc.data });
-  }
+
 
   async sendVideoToServer() {
     const fd = new FormData();
