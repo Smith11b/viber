@@ -88,3 +88,8 @@
   display: inline-block;
   text-align: center;
 }
+
+.recording-list {
+    height: 680px;
+    overflow-y: scroll;
+}

@@ -3,6 +3,7 @@ import Logo from "./component/Logo";
 import { Route, Switch } from "react-router-dom";
 import Home from "./Home";
 import NavBar from "./component/NavBar";
+import Recordings from "./Recordings";
 
 class App extends Component {
   constructor() {
@@ -21,7 +22,6 @@ class App extends Component {
     this.getWebCam = this.getWebCam.bind(this);
     this.recordVideo = this.recordVideo.bind(this);
     this.sendVideoToServer = this.sendVideoToServer.bind(this);
-
   }
 
   async getWebCam() {
@@ -35,9 +35,7 @@ class App extends Component {
     return stream;
   }
 
-  async getRecordings(){
-    
-  }
+  async getRecordings() {}
 
   recordVideo() {
     if (!this.state.myVideoSrc) {
@@ -65,9 +63,6 @@ class App extends Component {
       this.sendVideoToServer();
     }
   }
-
-
-
 
   async sendVideoToServer() {
     const fd = new FormData();
@@ -118,6 +113,7 @@ class App extends Component {
         <Logo />
         <Switch>
           <Route
+            exact
             path="/"
             render={props => (
               <Home
@@ -128,7 +124,11 @@ class App extends Component {
               />
             )}
           />
-          <Route path="/recordings" />
+          <Route
+            exact
+            path="/recordings"
+            render={props => <Recordings {...props} state={this.state} />}
+          />
         </Switch>
         <NavBar />
       </div>
