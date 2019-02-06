@@ -25,6 +25,8 @@ app.use(express.json());
 const upload = multer({ dest: __dirname + "/public/videos" });
 const type = upload.single("video");
 
+
+// POST listners
 app.post("/api/recordings", type, (req, res) => {
   console.log(req.body, req.file);
   const newVid = new Video({
@@ -34,13 +36,9 @@ app.post("/api/recordings", type, (req, res) => {
   res.send(req.file.filename);
 });
 
+
+// GET listners
 app.get("/api/recordings", (req, res, next) => {
-  //   Video.find()
-  //     .then(videos => {
-  //       console.log(typeof videos);
-  //       return res.status(200).send(videos);
-  //     })
-  //     .catch(err => console.log("nope didn't work ", err.message));
   Video.find((err, data) => {
     if (err) {
       res.status(500);
@@ -54,6 +52,12 @@ app.get("/api/vids/:fileName", (req, res) => {
   const fileName = req.params.fileName;
   res.sendFile(`/Users/student/Dev/Viber/public/videos/${fileName}`);
 });
+
+
+app.delete('/api/video/:id', (req, res) => {
+    const id = req.params.id;
+    Video.deleteOne({_id: id}).then(res.send("it's been deleted"))
+})
 
 app.use(express.static("public"));
 app.use((err, req, res, next) => {

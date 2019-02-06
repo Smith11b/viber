@@ -52,7 +52,7 @@
 }
 
 .start-circle h1 {
-    padding-top: 45px
+  padding-top: 45px;
 }
 
 .record-circle:hover {
@@ -90,6 +90,30 @@
 }
 
 .recording-list {
-    height: 680px;
-    overflow-y: scroll;
+  height: 680px;
+  overflow-y: scroll;
+}
+.video-card {
+  width: 350px;
+  margin: auto;
+}
+
+.recordings-vid {
+  height: 200px;
+}
+
+.delete-btn {
+  border: 1px white solid;
+  padding: 10px;
+  width: 70px;
+  background-color: #e4476d;
+  color: white;
+}
+
+.edit-btn {
+  border: 1px white solid;
+  padding: 10px;
+  width: 70px;
+  background-color: #b24d8e;
+  color: white;
 }

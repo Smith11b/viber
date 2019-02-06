@@ -17,12 +17,15 @@ class App extends Component {
       MediaRecorder: null,
       chunks: null,
       blobSrc: null,
-      recordings: []
+      recordings: [],
+      isPlaying: false
     };
     this.getWebCam = this.getWebCam.bind(this);
     this.recordVideo = this.recordVideo.bind(this);
     this.sendVideoToServer = this.sendVideoToServer.bind(this);
     this.getRecordings = this.getRecordings.bind(this);
+    this.videoOnClickHandler = this.videoOnClickHandler.bind(this)
+    
   }
 
   componentDidMount() {
@@ -71,7 +74,24 @@ class App extends Component {
       let superBlob = new Blob(this.state.chunks, { type: "video/webm" });
       this.setState({ videoBlob: superBlob });
       this.sendVideoToServer();
+ 
     }
+  }
+
+  videoOnClickHandler(e){
+    if(this.state.isPlaying){
+      this.setState(ps => {return {isPlaying: !ps.isPlaying}});
+      e.target.pause();
+    } else {
+      this.setState(ps => {return {isPlaying: !ps.isPlaying}});
+      e.target.play();
+      console.log("playing...")
+    }
+  }
+
+  deleteClickHandler(id){
+    axios.delete(`/api/video/:id${id}`).then(res => console.log(res));
+
   }
 
   async sendVideoToServer() {
@@ -137,7 +157,7 @@ class App extends Component {
           <Route
             exact
             path="/recordings"
-            render={props => <Recordings {...props} state={this.state} />}
+            render={props => <Recordings {...props} state={this.state} deleteBTN = {this.deleteClickHandler} videoClick = {this.videoOnClickHandler}/>}
           />
         </Switch>
         <NavBar />
