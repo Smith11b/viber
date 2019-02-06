@@ -4,6 +4,7 @@ import { Route, Switch } from "react-router-dom";
 import Home from "./Home";
 import NavBar from "./component/NavBar";
 import Recordings from "./Recordings";
+import axios from "axios";
 
 class App extends Component {
   constructor() {
@@ -11,7 +12,6 @@ class App extends Component {
     this.state = {
       myVideoSrc: null,
       theirVideoSrc: null,
-      endpoint: "https://127.0.0.1:4001",
       isRecording: false,
       videoBlob: null,
       MediaRecorder: null,
@@ -22,6 +22,11 @@ class App extends Component {
     this.getWebCam = this.getWebCam.bind(this);
     this.recordVideo = this.recordVideo.bind(this);
     this.sendVideoToServer = this.sendVideoToServer.bind(this);
+    this.getRecordings = this.getRecordings.bind(this);
+  }
+
+  componentDidMount() {
+    this.getRecordings();
   }
 
   async getWebCam() {
@@ -35,7 +40,12 @@ class App extends Component {
     return stream;
   }
 
-  async getRecordings() {}
+  async getRecordings() {
+    axios
+      .get("/api/recordings")
+      .then(res => this.setState({recordings: res.data}))
+      .catch(err => console.log("err"));
+  }
 
   recordVideo() {
     if (!this.state.myVideoSrc) {

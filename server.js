@@ -12,8 +12,7 @@ db.once("open", () => console.log("we're connected!"));
 // Schema Setup ------>
 
 const videoSchema = new mongoose.Schema({
-  fileName: String,
-  filePath: String
+  fileName: String
 });
 
 const Video = mongoose.model("Video", videoSchema);
@@ -21,6 +20,7 @@ const Video = mongoose.model("Video", videoSchema);
 // Server ---------------->
 
 const app = express();
+app.use(express.json());
 
 const upload = multer({ dest: __dirname + "/public/videos" });
 const type = upload.single("video");
@@ -28,11 +28,26 @@ const type = upload.single("video");
 app.post("/api/recordings", type, (req, res) => {
   console.log(req.body, req.file);
   const newVid = new Video({
-    fileName: req.file.filename,
-    filePath: req.file.path
+    fileName: req.file.filename
   });
   newVid.save();
   res.send(req.file.filename);
+});
+
+app.get("/api/recordings", (req, res, next) => {
+  //   Video.find()
+  //     .then(videos => {
+  //       console.log(typeof videos);
+  //       return res.status(200).send(videos);
+  //     })
+  //     .catch(err => console.log("nope didn't work ", err.message));
+  Video.find((err, data) => {
+    if (err) {
+      res.status(500);
+      return next(err);
+    }
+    return res.status(200).send(data);
+  });
 });
 
 app.get("/api/vids/:fileName", (req, res) => {
@@ -41,7 +56,10 @@ app.get("/api/vids/:fileName", (req, res) => {
 });
 
 app.use(express.static("public"));
+app.use((err, req, res, next) => {
+  res.send("Something went wrong");
+});
 
-app.listen(process.env.PORT, () =>
-  console.log("Mr smith I have your server ready")
-);
+app.listen(process.env.PORT, () => {
+  console.log("Mr smith I have your server ready");
+});
